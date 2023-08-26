@@ -12,11 +12,11 @@ import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import superjson from "superjson";
 import {
   createPagesServerClient,
-  type SupabaseClient,
   type User,
 } from "@supabase/auth-helpers-nextjs";
 import type { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
 import { ZodError } from "zod";
+import db from "./db/drizzle";
 
 /**
  * 1. CONTEXT
@@ -25,8 +25,6 @@ import { ZodError } from "zod";
  *
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
-
-type CreateContextOptions = Record<string, never>;
 
 interface InnerTRPCContext extends Partial<CreateNextContextOptions> {
   user: User | null;
@@ -47,6 +45,7 @@ const createInnerTRPCContext = ({ user, auth }: InnerTRPCContext) => {
   return {
     user,
     auth,
+    db,
   };
 };
 
